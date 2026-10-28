@@ -1,0 +1,196 @@
+@model HotelBookingSystem.ViewModels.ManageBookingsFilterViewModel
+
+@{
+    ViewData["Title"] = "Manage All Hotel Bookings";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <span class="text-warning text-uppercase fw-bold" style="letter-spacing: 0.12em; font-size: 0.85rem;">Front Desk Management</span>
+            <h1 class="display-6 fw-bold m-0 text-dark">All Guest Bookings</h1>
+            <p class="text-muted small m-0">Showing @Model.Bookings.Count reservations</p>
+        </div>
+
+        <a asp-action="Dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-speedometer2 me-1"></i> Admin Dashboard
+        </a>
+    </div>
+
+    <!-- Filter & Search Toolbar -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+        <form asp-action="Bookings" method="get">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Search Guest Name, Email, or Room</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
+                        <input type="text" name="search" class="form-control border-start-0" value="@Model.SearchQuery" placeholder="Search by name, email, or room..." />
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Filter By Status</label>
+                    <select name="status" class="form-select">
+                        <option value="All" selected="@(Model.Status == "All")">All Booking Statuses</option>
+                        <option value="Confirmed" selected="@(Model.Status == "Confirmed")">Confirmed</option>
+                        <option value="CheckedIn" selected="@(Model.Status == "CheckedIn")">Checked-In</option>
+                        <option value="CheckedOut" selected="@(Model.Status == "CheckedOut")">Checked-Out / Completed</option>
+                        <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
+                        <option value="Cancelled" selected="@(Model.Status == "Cancelled")">Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-luxe-gold flex-grow-1">
+                        <i class="bi bi-filter"></i> Apply Filter
+                    </button>
+                    <a asp-action="Bookings" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bookings Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+        <div class="table-responsive">
+            <table class="table table-luxe align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Guest Info</th>
+                        <th>Room</th>
+                        <th>Stay Dates</th>
+                        <th>Guests</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th class="text-end">Front Desk Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Bookings.Any())
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox display-4 d-block mb-2 text-muted"></i>
+                                No bookings found matching the selected filter.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var b in Model.Bookings)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="fw-bold text-warning">#LUXE-@b.BookingId.ToString("D5")</span>
+                                    <div class="small text-muted">@b.BookingDate.ToString("dd MMM yyyy")</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">@b.User?.FullName</div>
+                                    <div class="small text-muted"><i class="bi bi-envelope"></i> @b.User?.Email</div>
+                                    <div class="small text-muted"><i class="bi bi-telephone"></i> @b.User?.Phone</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold">Room @b.Room?.RoomNumber</div>
+                                    <span class="badge bg-light text-dark border">@b.Room?.RoomType?.TypeName</span>
+                                </td>
+                                <td>
+                                    <div class="small fw-bold">@b.CheckInDate.ToString("dd MMM yyyy")</div>
+                                    <div class="small text-muted">to @b.CheckOutDate.ToString("dd MMM yyyy")</div>
+                                    <small class="text-primary fw-semibold">(@((b.CheckOutDate - b.CheckInDate).Days) Nights)</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="bi bi-people me-1"></i> @b.NumberOfGuests
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark fs-6">₹@b.TotalAmount.ToString("N0")</div>
+                                </td>
+                                <td>
+                                    @if (b.BookingStatus == "Confirmed")
+                                    {
+                                        <span class="badge bg-success-subtle text-success border border-success px-2 py-1">Confirmed</span>
+                                    }
+                                    else if (b.BookingStatus == "CheckedIn")
+                                    {
+                                        <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1">Checked-In</span>
+                                    }
+                                    else if (b.BookingStatus == "CheckedOut")
+                                    {
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary px-2 py-1">Checked-Out</span>
+                                    }
+                                    else if (b.BookingStatus == "Cancelled")
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1">Cancelled</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning px-2 py-1">Pending</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            Update Status
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                            @if (b.BookingStatus != "Confirmed")
+                                            {
+                                                <li>
+                                                    <form asp-action="UpdateBookingStatus" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="bookingId" value="@b.BookingId" />
+                                                        <input type="hidden" name="newStatus" value="Confirmed" />
+                                                        <button type="submit" class="dropdown-item text-success"><i class="bi bi-check-circle me-1"></i> Mark Confirmed</button>
+                                                    </form>
+                                                </li>
+                                            }
+                                            @if (b.BookingStatus != "CheckedIn")
+                                            {
+                                                <li>
+                                                    <form asp-action="UpdateBookingStatus" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="bookingId" value="@b.BookingId" />
+                                                        <input type="hidden" name="newStatus" value="CheckedIn" />
+                                                        <button type="submit" class="dropdown-item text-primary"><i class="bi bi-door-open me-1"></i> Check In Guest</button>
+                                                    </form>
+                                                </li>
+                                            }
+                                            @if (b.BookingStatus != "CheckedOut")
+                                            {
+                                                <li>
+                                                    <form asp-action="UpdateBookingStatus" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="bookingId" value="@b.BookingId" />
+                                                        <input type="hidden" name="newStatus" value="CheckedOut" />
+                                                        <button type="submit" class="dropdown-item text-secondary"><i class="bi bi-flag me-1"></i> Check Out Guest</button>
+                                                    </form>
+                                                </li>
+                                            }
+                                            @if (b.BookingStatus != "Cancelled")
+                                            {
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <form asp-action="UpdateBookingStatus" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="bookingId" value="@b.BookingId" />
+                                                        <input type="hidden" name="newStatus" value="Cancelled" />
+                                                        <button type="submit" class="dropdown-item text-danger"><i class="bi bi-x-circle me-1"></i> Cancel Reservation</button>
+                                                    </form>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

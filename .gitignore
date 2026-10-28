@@ -1,0 +1,25 @@
+## Visual Studio / .NET GitIgnore
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio files
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.pidb
+*.booproj
+*.svclog
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Zip packages (optional archive)
+*.zip

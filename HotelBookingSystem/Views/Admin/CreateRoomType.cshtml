@@ -1,0 +1,65 @@
+@model HotelBookingSystem.Models.RoomType
+
+@{
+    ViewData["Title"] = "Create Room Category";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                <div class="p-4 bg-light border-bottom d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fw-bold m-0 text-dark">Create Room Category</h4>
+                        <small class="text-muted">Define category name, pricing rate, and guest limit</small>
+                    </div>
+                    <a asp-action="RoomTypes" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+                </div>
+
+                <div class="p-4 p-md-5">
+                    <form asp-action="CreateRoomType" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="TypeName" class="form-label">Category Name *</label>
+                            <input asp-for="TypeName" class="form-control" placeholder="e.g. Deluxe Ocean Suite" required />
+                            <span asp-validation-for="TypeName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="PricePerNight" class="form-label">Price Per Night (₹) *</label>
+                                <input asp-for="PricePerNight" class="form-control" type="number" step="0.01" min="100" required />
+                                <span asp-validation-for="PricePerNight" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Capacity" class="form-label">Max Guest Capacity *</label>
+                                <input asp-for="Capacity" class="form-control" type="number" min="1" max="20" value="2" required />
+                                <span asp-validation-for="Capacity" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Describe the ambiance, bedding, and inclusions..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="RoomTypes" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-luxe-gold">Save Category</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

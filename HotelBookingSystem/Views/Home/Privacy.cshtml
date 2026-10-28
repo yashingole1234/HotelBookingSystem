@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "Hospitality Privacy & Security Policy";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <span class="text-warning text-uppercase fw-bold" style="letter-spacing: 0.12em; font-size: 0.85rem;">Compliance & Security</span>
+                <h1 class="display-6 fw-bold text-dark mb-4">Guest Privacy & Security Commitment</h1>
+
+                <p class="text-muted">
+                    At The Grand Luxe Hotel & Suites, safeguarding our guests' personal data, reservation history, and payment details is of utmost importance. This policy outlines our protocols for data encryption and responsible access management.
+                </p>
+
+                <h4 class="fw-bold mt-4 mb-2 text-dark">1. Authentication & Access Control</h4>
+                <p class="text-muted">
+                    Our platform implements ASP.NET Core Cookie Authentication with HTTP-Only secure cookies, sliding expirations, and strict role-based authorization segregation between Guests and Hotel Operations Staff.
+                </p>
+
+                <h4 class="fw-bold mt-4 mb-2 text-dark">2. Password Security</h4>
+                <p class="text-muted">
+                    We employ industry-standard cryptographic PBKDF2 with HMAC-SHA256 password hashing via <code>Microsoft.Extensions.Identity.Core</code>. Plain-text credentials are never stored or logged.
+                </p>
+
+                <h4 class="fw-bold mt-4 mb-2 text-dark">3. Anti-Forgery & CSRF Protection</h4>
+                <p class="text-muted">
+                    All state-mutating requests (Room Creation, Editing, Booking Reservations, and Status Updates) are strictly validated with cryptographically signed <code>[ValidateAntiForgeryToken]</code> tokens.
+                </p>
+
+                <div class="mt-4 pt-3 border-top">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

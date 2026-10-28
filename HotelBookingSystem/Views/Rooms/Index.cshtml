@@ -1,0 +1,174 @@
+@model IEnumerable<HotelBookingSystem.Models.Room>
+
+@{
+    ViewData["Title"] = "Luxury Rooms & Suites";
+    var roomTypes = ViewBag.RoomTypes as List<HotelBookingSystem.Models.RoomType> ?? new List<HotelBookingSystem.Models.RoomType>();
+    int? selectedTypeId = ViewBag.SelectedTypeId;
+    decimal? selectedMaxPrice = ViewBag.SelectedMaxPrice;
+    int? selectedGuests = ViewBag.SelectedGuests;
+    string selectedStatus = ViewBag.SelectedStatus ?? "All";
+    DateTime? checkIn = ViewBag.CheckIn;
+    DateTime? checkOut = ViewBag.CheckOut;
+}
+
+<div class="container py-4">
+    <!-- Header Banner -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <span class="text-warning text-uppercase fw-bold" style="letter-spacing: 0.12em; font-size: 0.85rem;">Accommodations</span>
+            <h1 class="display-6 fw-bold m-0 text-dark">Our Luxury Rooms & Suites</h1>
+            <p class="text-muted small m-0">Showing @Model.Count() exquisite accommodations</p>
+        </div>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="d-flex gap-2">
+                <a asp-action="Manage" class="btn btn-luxe-navy">
+                    <i class="bi bi-table"></i> Staff Table View
+                </a>
+                <a asp-action="Create" class="btn btn-luxe-gold">
+                    <i class="bi bi-plus-circle"></i> Add New Room
+                </a>
+            </div>
+        }
+    </div>
+
+    <!-- Filter & Search Panel -->
+    <div class="card border-0 shadow-sm rounded-4 mb-5 p-4 bg-white">
+        <form asp-action="Index" method="get">
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Suite Category</label>
+                    <select name="typeId" class="form-select">
+                        <option value="">All Categories</option>
+                        @foreach (var type in roomTypes)
+                        {
+                            <option value="@type.RoomTypeId" selected="@(selectedTypeId == type.RoomTypeId)">
+                                @type.TypeName (₹@type.PricePerNight.ToString("N0"))
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Min Guests</label>
+                    <select name="guests" class="form-select">
+                        <option value="">Any Capacity</option>
+                        <option value="1" selected="@(selectedGuests == 1)">1+ Guests</option>
+                        <option value="2" selected="@(selectedGuests == 2)">2+ Guests</option>
+                        <option value="3" selected="@(selectedGuests == 3)">3+ Guests</option>
+                        <option value="4" selected="@(selectedGuests == 4)">4+ Guests</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Max Nightly Rate</label>
+                    <select name="maxPrice" class="form-select">
+                        <option value="">No Limit</option>
+                        <option value="3000" selected="@(selectedMaxPrice == 3000)">Up to ₹3,000</option>
+                        <option value="5000" selected="@(selectedMaxPrice == 5000)">Up to ₹5,000</option>
+                        <option value="10000" selected="@(selectedMaxPrice == 10000)">Up to ₹10,000</option>
+                        <option value="25000" selected="@(selectedMaxPrice == 25000)">Up to ₹25,000</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="All" selected="@(selectedStatus == "All")">All Rooms</option>
+                        <option value="Available" selected="@(selectedStatus == "Available")">Available Only</option>
+                        <option value="Maintenance" selected="@(selectedStatus == "Maintenance")">Under Maintenance</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-3 col-md-12 d-flex gap-2">
+                    <button type="submit" class="btn btn-luxe-gold flex-grow-1">
+                        <i class="bi bi-funnel"></i> Apply Filter
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Rooms Catalog Grid -->
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 bg-white rounded-4 shadow-sm">
+            <i class="bi bi-door-closed display-3 text-muted"></i>
+            <h3 class="fw-bold mt-3">No Rooms Found</h3>
+            <p class="text-muted">No rooms match your filter criteria. Try resetting the filters.</p>
+            <a asp-action="Index" class="btn btn-luxe-navy">View All Rooms</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var room in Model)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="room-card-luxe anim-fade-up">
+                        <div class="room-image-wrap">
+                            <img src="@(string.IsNullOrEmpty(room.ImageUrl) ? "/images/rooms/deluxe.jpg" : room.ImageUrl)" alt="Room @room.RoomNumber" loading="lazy" onerror="this.onerror=null; this.src='/images/rooms/deluxe.jpg';" />
+
+                            @if (room.Status == "Available")
+                            {
+                                <div class="room-badge-status badge-avail">
+                                    <span class="status-indicator-dot"></span> Available
+                                </div>
+                            }
+                            else if (room.Status == "Booked")
+                            {
+                                <div class="room-badge-status badge-booked">
+                                    <span class="status-indicator-dot"></span> Booked
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="room-badge-status badge-maint">
+                                    <span class="status-indicator-dot"></span> Maintenance
+                                </div>
+                            }
+
+                            <div class="room-badge-price">
+                                ₹@(room.RoomType?.PricePerNight.ToString("N0") ?? "0")<span> / night</span>
+                            </div>
+                        </div>
+
+                        <div class="room-card-body">
+                            <div class="room-type-tag">Floor @room.FloorNumber • @room.RoomType?.TypeName</div>
+                            <h4 class="room-card-title">Room @room.RoomNumber</h4>
+                            <p class="room-card-desc">@(string.IsNullOrEmpty(room.Description) ? room.RoomType?.Description : room.Description)</p>
+
+                            <div class="amenity-chips">
+                                <span class="amenity-chip"><i class="bi bi-people"></i> Up to @(room.RoomType?.Capacity ?? 2) Guests</span>
+                                <span class="amenity-chip"><i class="bi bi-wifi"></i> Free Wi-Fi</span>
+                                <span class="amenity-chip"><i class="bi bi-tv"></i> Smart TV</span>
+                                <span class="amenity-chip"><i class="bi bi-snow"></i> A/C</span>
+                            </div>
+
+                            <div class="room-card-footer">
+                                <a asp-action="Details" asp-route-id="@room.RoomId" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-eye"></i> Details
+                                </a>
+
+                                @if (room.Status == "Available")
+                                {
+                                    <a asp-controller="Bookings" asp-action="Create" asp-route-roomId="@room.RoomId" class="btn btn-sm btn-luxe-gold">
+                                        <i class="bi bi-calendar-check"></i> Book Now
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-sm btn-secondary" disabled>Unavailable</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

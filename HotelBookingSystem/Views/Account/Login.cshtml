@@ -1,0 +1,83 @@
+@model HotelBookingSystem.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Guest & Staff Sign In";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <!-- Luxury Auth Card -->
+            <div class="auth-card anim-fade-up">
+                <div class="auth-header">
+                    <div class="brand-crest mx-auto mb-3" style="width: 50px; height: 50px;">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+                    <h2 class="display-6 fw-bold mb-1">Welcome Back</h2>
+                    <p class="text-white-50 small m-0">Sign in to manage your luxury stay or hotel operations</p>
+                </div>
+
+                <div class="auth-body">
+                    <!-- Quick Demo Credentials Callout -->
+                    <div class="alert alert-warning py-2 px-3 small rounded-3 mb-4 border border-warning">
+                        <div class="fw-bold text-dark mb-1"><i class="bi bi-info-circle me-1"></i> Quick Test Credentials:</div>
+                        <div class="d-flex justify-content-between">
+                            <span><strong>Admin:</strong> admin@grandluxe.com</span>
+                            <code>Admin@123</code>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span><strong>Guest:</strong> yash@gmail.com</span>
+                            <code>123456</code>
+                        </div>
+                    </div>
+
+                    <form asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3 py-2 small" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email Address *</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+                                <input asp-for="Email" class="form-control border-start-0" placeholder="name@domain.com" autocomplete="email" required />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Password *</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-key text-muted"></i></span>
+                                <input asp-for="Password" class="form-control border-start-0" placeholder="••••••••" autocomplete="current-password" required />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input asp-for="RememberMe" class="form-check-input" id="rememberCheck" />
+                                <label class="form-check-label small text-muted" for="rememberCheck">Remember me</label>
+                            </div>
+                            <a href="#" class="small text-muted text-decoration-none">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-luxe-gold w-100 py-3 mb-3">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Account
+                        </button>
+
+                        <div class="text-center small text-muted">
+                            Don't have an account yet? 
+                            <a asp-action="Register" class="text-warning fw-bold text-decoration-none">Register as Guest</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

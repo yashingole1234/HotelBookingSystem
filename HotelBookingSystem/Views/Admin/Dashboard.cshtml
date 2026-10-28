@@ -1,0 +1,260 @@
+@model HotelBookingSystem.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Executive Admin Dashboard";
+}
+
+<div class="container py-4">
+    <!-- Top Bar -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <span class="text-warning text-uppercase fw-bold" style="letter-spacing: 0.12em; font-size: 0.85rem;">Administration & Control</span>
+            <h1 class="display-6 fw-bold m-0 text-dark">Hotel Operations Dashboard</h1>
+            <p class="text-muted small m-0">Live occupancy, revenue, and front-desk reservation management</p>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a asp-action="Bookings" class="btn btn-luxe-navy">
+                <i class="bi bi-calendar-check me-1"></i> All Bookings
+            </a>
+            <a asp-controller="Rooms" asp-action="Create" class="btn btn-luxe-gold">
+                <i class="bi bi-plus-circle me-1"></i> Add Room
+            </a>
+        </div>
+    </div>
+
+    <!-- 4 KPI Metrics Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-3 col-sm-6">
+            <div class="kpi-card kpi-gold">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="kpi-title">Total Revenue</div>
+                        <div class="kpi-val text-warning">₹@Model.TotalRevenue.ToString("N0")</div>
+                        <small class="text-muted"><i class="bi bi-cash-stack text-success me-1"></i> From active & completed stays</small>
+                    </div>
+                    <div class="kpi-icon-box kpi-icon-gold">
+                        <i class="bi bi-currency-rupee"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6">
+            <div class="kpi-card kpi-blue">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="kpi-title">Total Bookings</div>
+                        <div class="kpi-val">@Model.TotalBookingsCount</div>
+                        <small class="text-muted"><i class="bi bi-check2 text-primary me-1"></i> @Model.ConfirmedBookingsCount Confirmed</small>
+                    </div>
+                    <div class="kpi-icon-box kpi-icon-blue">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6">
+            <div class="kpi-card kpi-emerald">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="kpi-title">Occupancy Rate</div>
+                        <div class="kpi-val text-success">@Model.OccupancyRate%</div>
+                        <small class="text-muted"><i class="bi bi-people-fill text-success me-1"></i> @Model.CheckedInCount Checked-in guests</small>
+                    </div>
+                    <div class="kpi-icon-box kpi-icon-emerald">
+                        <i class="bi bi-pie-chart-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6">
+            <div class="kpi-card kpi-rose">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="kpi-title">Room Inventory</div>
+                        <div class="kpi-val">@Model.AvailableRoomsCount <span class="fs-6 text-muted fw-normal">/ @Model.TotalRoomsCount Avail</span></div>
+                        <small class="text-muted"><i class="bi bi-tools text-danger me-1"></i> @Model.MaintenanceRoomsCount in Maintenance</small>
+                    </div>
+                    <div class="kpi-icon-box kpi-icon-rose">
+                        <i class="bi bi-door-open-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Shortcuts Navigation -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <a asp-action="Bookings" class="card border-0 shadow-sm rounded-4 p-3 bg-white text-decoration-none hover-translate text-center">
+                <i class="bi bi-calendar-week fs-3 text-primary mb-1"></i>
+                <div class="fw-bold text-dark">Manage Bookings</div>
+                <small class="text-muted">Check-in / Check-out</small>
+            </a>
+        </div>
+        <div class="col-md-3 col-6">
+            <a asp-controller="Rooms" asp-action="Manage" class="card border-0 shadow-sm rounded-4 p-3 bg-white text-decoration-none hover-translate text-center">
+                <i class="bi bi-key fs-3 text-warning mb-1"></i>
+                <div class="fw-bold text-dark">Room Inventory</div>
+                <small class="text-muted">Add & edit rooms</small>
+            </a>
+        </div>
+        <div class="col-md-3 col-6">
+            <a asp-action="RoomTypes" class="card border-0 shadow-sm rounded-4 p-3 bg-white text-decoration-none hover-translate text-center">
+                <i class="bi bi-tags fs-3 text-success mb-1"></i>
+                <div class="fw-bold text-dark">Room Categories</div>
+                <small class="text-muted">Pricing & capacity</small>
+            </a>
+        </div>
+        <div class="col-md-3 col-6">
+            <a asp-action="Users" class="card border-0 shadow-sm rounded-4 p-3 bg-white text-decoration-none hover-translate text-center">
+                <i class="bi bi-people fs-3 text-info mb-1"></i>
+                <div class="fw-bold text-dark">Guest Accounts</div>
+                <small class="text-muted">Registered members</small>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Reservations & Status Management -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+        <div class="p-4 bg-light border-bottom d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="fw-bold m-0 text-dark">Recent Reservations</h4>
+                <small class="text-muted">Front desk status updates & incoming guests</small>
+            </div>
+            <a asp-action="Bookings" class="btn btn-sm btn-outline-secondary">
+                View All (@Model.TotalBookingsCount)
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-luxe align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Guest</th>
+                        <th>Room</th>
+                        <th>Dates</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th class="text-end">Front Desk Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.RecentBookings.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">No reservations recorded yet.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var b in Model.RecentBookings)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="fw-bold text-warning">#LUXE-@b.BookingId.ToString("D5")</span>
+                                    <div class="text-muted small">@b.BookingDate.ToString("dd MMM yyyy")</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">@b.User?.FullName</div>
+                                    <small class="text-muted">@b.User?.Email</small>
+                                </td>
+                                <td>
+                                    <div class="fw-bold">Room @b.Room?.RoomNumber</div>
+                                    <small class="text-muted">@b.Room?.RoomType?.TypeName</small>
+                                </td>
+                                <td>
+                                    <div class="small fw-semibold">@b.CheckInDate.ToString("dd MMM") - @b.CheckOutDate.ToString("dd MMM yyyy")</div>
+                                    <small class="text-muted">@((b.CheckOutDate - b.CheckInDate).Days) Night(s) • @b.NumberOfGuests Guest(s)</small>
+                                </td>
+                                <td class="fw-bold text-dark">
+                                    ₹@b.TotalAmount.ToString("N0")
+                                </td>
+                                <td>
+                                    @if (b.BookingStatus == "Confirmed")
+                                    {
+                                        <span class="badge bg-success-subtle text-success border border-success px-2 py-1">Confirmed</span>
+                                    }
+                                    else if (b.BookingStatus == "CheckedIn")
+                                    {
+                                        <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1">Checked-In</span>
+                                    }
+                                    else if (b.BookingStatus == "CheckedOut")
+                                    {
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary px-2 py-1">Checked-Out</span>
+                                    }
+                                    else if (b.BookingStatus == "Cancelled")
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1">Cancelled</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning px-2 py-1">Pending</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            Status
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                            @if (b.BookingStatus != "Confirmed")
+                                            {
+                                                <li>
+                                                    <form asp-action="UpdateBookingStatus" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="bookingId" value="@b.BookingId" />
+                                                        <input type="hidden" name="newStatus" value="Confirmed" />
+                                                        <button type="submit" class="dropdown-item text-success"><i class="bi bi-check-circle me-1"></i> Set Confirmed</button>
+                                                    </form>
+                                                </li>
+                                            }
+                                            @if (b.BookingStatus != "CheckedIn")
+                                            {
+                                                <li>
+                                                    <form asp-action="UpdateBookingStatus" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="bookingId" value="@b.BookingId" />
+                                                        <input type="hidden" name="newStatus" value="CheckedIn" />
+                                                        <button type="submit" class="dropdown-item text-primary"><i class="bi bi-door-open me-1"></i> Check In Guest</button>
+                                                    </form>
+                                                </li>
+                                            }
+                                            @if (b.BookingStatus != "CheckedOut")
+                                            {
+                                                <li>
+                                                    <form asp-action="UpdateBookingStatus" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="bookingId" value="@b.BookingId" />
+                                                        <input type="hidden" name="newStatus" value="CheckedOut" />
+                                                        <button type="submit" class="dropdown-item text-secondary"><i class="bi bi-flag me-1"></i> Check Out Guest</button>
+                                                    </form>
+                                                </li>
+                                            }
+                                            @if (b.BookingStatus != "Cancelled")
+                                            {
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <form asp-action="UpdateBookingStatus" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="bookingId" value="@b.BookingId" />
+                                                        <input type="hidden" name="newStatus" value="Cancelled" />
+                                                        <button type="submit" class="dropdown-item text-danger"><i class="bi bi-x-circle me-1"></i> Cancel Booking</button>
+                                                    </form>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,255 @@
+@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - The Grand Luxe Hotel & Suites</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Custom Luxury Styling & Animations -->
+    <link rel="stylesheet" href="~/css/luxury-hotel.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+
+<body>
+    <!-- Top Sticky Luxury Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg luxe-navbar">
+            <div class="container">
+                <!-- Brand Logo & Crest -->
+                <a class="navbar-brand luxe-brand" asp-controller="Home" asp-action="Index">
+                    <div class="brand-crest">
+                        <i class="bi bi-gem"></i>
+                    </div>
+                    <div>
+                        <div class="brand-title">GRAND LUXE</div>
+                        <div class="brand-subtitle">Hotel & Suites</div>
+                    </div>
+                </a>
+
+                <!-- Mobile Toggle Button -->
+                <button class="navbar-toggler text-white border-0" type="button" data-bs-toggle="collapse" data-bs-target="#luxeNavbarContent" aria-controls="luxeNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="bi bi-list fs-2 text-warning"></i>
+                </button>
+
+                <!-- Navbar Links & Actions -->
+                <div class="collapse navbar-collapse" id="luxeNavbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item">
+                            <a class="nav-link luxe-nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link luxe-nav-link" asp-controller="Rooms" asp-action="Index">
+                                <i class="bi bi-door-open"></i> Rooms & Suites
+                            </a>
+                        </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link luxe-nav-link" asp-controller="Admin" asp-action="Dashboard">
+                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link luxe-nav-link" asp-controller="Admin" asp-action="Bookings">
+                                    <i class="bi bi-calendar-check"></i> Manage Bookings
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link luxe-nav-link" asp-controller="Rooms" asp-action="Manage">
+                                    <i class="bi bi-key"></i> Manage Rooms
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- User Actions -->
+                    <div class="d-flex align-items-center gap-2">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            @if (!User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-sm btn-outline-warning text-white me-2 d-inline-flex align-items-center gap-1">
+                                    <i class="bi bi-calendar-heart text-warning"></i> My Bookings
+                                </a>
+                            }
+
+                            <!-- User Profile Dropdown -->
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-luxe-navy dropdown-toggle d-flex align-items-center gap-2" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle fs-6 text-warning"></i>
+                                    <span>@User.Identity.Name</span>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <span class="user-badge badge-admin">Admin</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="user-badge badge-guest">Guest</span>
+                                    }
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 p-2" aria-labelledby="userMenuDropdown">
+                                    <li class="px-3 py-2 border-bottom">
+                                        <small class="text-muted d-block">Signed in as</small>
+                                        <strong class="text-truncate d-block">@User.Identity.Name</strong>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Account" asp-action="Profile">
+                                            <i class="bi bi-person text-primary"></i> My Profile
+                                        </a>
+                                    </li>
+                                    @if (!User.IsInRole("Admin"))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Bookings" asp-action="MyBookings">
+                                                <i class="bi bi-receipt text-success"></i> My Bookings
+                                            </a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Admin" asp-action="Dashboard">
+                                                <i class="bi bi-grid-1x2 text-warning"></i> Admin Panel
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Admin" asp-action="RoomTypes">
+                                                <i class="bi bi-tags text-info"></i> Room Categories
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Admin" asp-action="Users">
+                                                <i class="bi bi-people text-secondary"></i> Guest Accounts
+                                            </a>
+                                        </li>
+                                    }
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="dropdown-item py-2 text-danger d-flex align-items-center gap-2">
+                                                <i class="bi bi-box-arrow-right"></i> Sign Out
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-light d-inline-flex align-items-center gap-1">
+                                <i class="bi bi-box-arrow-in-right"></i> Sign In
+                            </a>
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-luxe-gold">
+                                <i class="bi bi-star-fill text-dark me-1"></i> Join Luxe
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Global Flash Message Alerts -->
+    <div class="container mt-3">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show shadow-sm anim-fade-up d-flex align-items-center gap-2" role="alert">
+                <i class="bi bi-check-circle-fill fs-5 text-success"></i>
+                <div>@TempData["SuccessMessage"]</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm anim-fade-up d-flex align-items-center gap-2" role="alert">
+                <i class="bi bi-exclamation-triangle-fill fs-5 text-danger"></i>
+                <div>@TempData["ErrorMessage"]</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+
+    <!-- Main Content Area -->
+    <main role="main" class="pb-5">
+        @RenderBody()
+    </main>
+
+    <!-- Luxury Footer -->
+    <footer class="luxe-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="brand-crest" style="width: 36px; height: 36px; font-size: 1.1rem;">
+                            <i class="bi bi-gem"></i>
+                        </div>
+                        <div class="footer-brand-title m-0">GRAND LUXE</div>
+                    </div>
+                    <p class="text-white-50 pe-lg-4">
+                        A sanctuary of refined hospitality, bespoke luxury suites, and panoramic coastal serenity. Designed for travelers who appreciate the exceptional.
+                    </p>
+                    <div class="d-flex gap-3 text-warning fs-5 mt-3">
+                        <a href="#" class="text-white-50 text-decoration-none hover-gold"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-white-50 text-decoration-none hover-gold"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white-50 text-decoration-none hover-gold"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="text-white-50 text-decoration-none hover-gold"><i class="bi bi-tripadvisor"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 col-6">
+                    <div class="footer-heading">Navigation</div>
+                    <a asp-controller="Home" asp-action="Index" class="footer-link">Home Sanctuary</a>
+                    <a asp-controller="Rooms" asp-action="Index" class="footer-link">Rooms & Suites</a>
+                    <a asp-controller="Account" asp-action="Login" class="footer-link">Guest Portal</a>
+                    <a asp-controller="Account" asp-action="Register" class="footer-link">Member Rewards</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-6">
+                    <div class="footer-heading">Hotel Services</div>
+                    <div class="text-white-50 mb-2"><i class="bi bi-check2 text-warning me-2"></i>24/7 Royal Concierge</div>
+                    <div class="text-white-50 mb-2"><i class="bi bi-check2 text-warning me-2"></i>Infinity Sky Pool & Spa</div>
+                    <div class="text-white-50 mb-2"><i class="bi bi-check2 text-warning me-2"></i>Michelin-Star Dining</div>
+                    <div class="text-white-50 mb-2"><i class="bi bi-check2 text-warning me-2"></i>Airport Chauffeur Service</div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-heading">Concierge Contact</div>
+                    <p class="text-white-50 mb-1"><i class="bi bi-geo-alt text-warning me-2"></i>77 Oceanfront Boulevard, Coastline</p>
+                    <p class="text-white-50 mb-1"><i class="bi bi-telephone text-warning me-2"></i>+91 (0) 98765 43210</p>
+                    <p class="text-white-50 mb-3"><i class="bi bi-envelope text-warning me-2"></i>concierge@grandluxe.com</p>
+                    <span class="badge bg-dark border border-warning text-warning p-2">
+                        <i class="bi bi-shield-check me-1"></i> Verified Safe & Certified 5-Star
+                    </span>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div>&copy; @DateTime.Now.Year The Grand Luxe Hotel & Suites. All rights reserved.</div>
+                <div class="d-flex gap-3">
+                    <a asp-controller="Home" asp-action="Privacy" class="text-white-50 text-decoration-none">Privacy Policy</a>
+                    <span class="text-white-25">•</span>
+                    <a href="#" class="text-white-50 text-decoration-none">Terms of Service</a>
+                    <span class="text-white-25">•</span>
+                    <a href="#" class="text-white-50 text-decoration-none">Security</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

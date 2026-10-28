@@ -1,0 +1,93 @@
+@model HotelBookingSystem.Models.Room
+
+@{
+    ViewData["Title"] = "Add New Room";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                <div class="p-4 bg-light border-bottom d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fw-bold m-0 text-dark">Add New Hotel Room</h4>
+                        <small class="text-muted">Register a new room into the booking inventory</small>
+                    </div>
+                    <a asp-action="Manage" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Inventory
+                    </a>
+                </div>
+
+                <div class="p-4 p-md-5">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="RoomNumber" class="form-label">Room Number *</label>
+                                <input asp-for="RoomNumber" class="form-control" placeholder="e.g. 101, 204, 305" required />
+                                <span asp-validation-for="RoomNumber" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="FloorNumber" class="form-label">Floor Number *</label>
+                                <input asp-for="FloorNumber" class="form-control" type="number" min="1" max="50" value="1" required />
+                                <span asp-validation-for="FloorNumber" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="RoomTypeId" class="form-label">Room Category *</label>
+                                <select asp-for="RoomTypeId" class="form-select" required>
+                                    <option value="">-- Select Category --</option>
+                                    @if (ViewBag.RoomTypes != null)
+                                    {
+                                        foreach (var type in ViewBag.RoomTypes)
+                                        {
+                                            <option value="@type.RoomTypeId">@type.TypeName - ₹@type.PricePerNight.ToString("N0") / night (@type.Capacity Guests)</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="RoomTypeId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Status" class="form-label">Status *</label>
+                                <select asp-for="Status" class="form-select" required>
+                                    <option value="Available" selected>Available</option>
+                                    <option value="Maintenance">Maintenance</option>
+                                    <option value="Booked">Booked</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="ImageUrl" class="form-label">Image URL</label>
+                                <input asp-for="ImageUrl" class="form-control" placeholder="https://images.unsplash.com/..." />
+                                <small class="text-muted">Enter a direct image link from Unsplash or local wwwroot path</small>
+                                <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Description" class="form-label">Room Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="3" placeholder="Highlight special views, bed features, or custom decor..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <a asp-action="Manage" class="btn btn-outline-secondary px-4">Cancel</a>
+                            <button type="submit" class="btn btn-luxe-gold px-4">
+                                <i class="bi bi-check-circle"></i> Save Room
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

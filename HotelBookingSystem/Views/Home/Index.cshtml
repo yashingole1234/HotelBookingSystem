@@ -1,0 +1,214 @@
+@{
+    ViewData["Title"] = "Sanctuary of Refined Hospitality";
+    var featuredRooms = ViewBag.FeaturedRooms as List<HotelBookingSystem.Models.Room> ?? new List<HotelBookingSystem.Models.Room>();
+    var roomTypes = ViewBag.RoomTypes as List<HotelBookingSystem.Models.RoomType> ?? new List<HotelBookingSystem.Models.RoomType>();
+}
+
+<!-- Hero Section -->
+<section class="hero-luxury">
+    <div class="container position-relative" style="z-index: 5;">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-badge anim-fade-up">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <span>Exquisite 5-Star Luxury Living</span>
+                </div>
+                <h1 class="hero-title anim-fade-up-delay-1">
+                    Where Timeless Elegance Meets <span>Coastal Serenity</span>
+                </h1>
+                <p class="hero-subtitle anim-fade-up-delay-2">
+                    Escape to a sanctuary of breathtaking sea views, artisanal culinary excellence, and bespoke presidential hospitality. Book your stay with best-rate assurance.
+                </p>
+                <div class="d-flex flex-wrap gap-3 anim-fade-up-delay-2">
+                    <a href="#booking-search" class="btn btn-luxe-gold">
+                        <i class="bi bi-calendar-check"></i> Book Your Suite
+                    </a>
+                    <a asp-controller="Rooms" asp-action="Index" class="btn btn-luxe-navy">
+                        <i class="bi bi-door-open"></i> Explore All Rooms
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Floating Live Search Widget -->
+<div class="container" id="booking-search">
+    <div class="search-widget-card anim-fade-up">
+        <form asp-controller="Rooms" asp-action="Index" method="get">
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-3 col-md-6">
+                    <label class="widget-label">
+                        <i class="bi bi-calendar3 text-warning"></i> Check-In Date
+                    </label>
+                    <input type="date" name="checkIn" class="widget-input" value="@DateTime.Today.ToString("yyyy-MM-dd")" min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="widget-label">
+                        <i class="bi bi-calendar3-range text-warning"></i> Check-Out Date
+                    </label>
+                    <input type="date" name="checkOut" class="widget-input" value="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" required />
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <label class="widget-label">
+                        <i class="bi bi-people text-warning"></i> Guests
+                    </label>
+                    <select name="guests" class="widget-input">
+                        <option value="1">1 Guest</option>
+                        <option value="2" selected>2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                        <option value="5">5+ Guests</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <label class="widget-label">
+                        <i class="bi bi-tag text-warning"></i> Suite Type
+                    </label>
+                    <select name="typeId" class="widget-input">
+                        <option value="">All Categories</option>
+                        @foreach (var type in roomTypes)
+                        {
+                            <option value="@type.RoomTypeId">@type.TypeName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <button type="submit" class="btn btn-luxe-gold w-100 py-2">
+                        <i class="bi bi-search"></i> Check Rooms
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Hotel Highlights / Why Choose Us -->
+<section class="py-5 mt-4">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-warning text-uppercase fw-bold letter-spacing-2" style="letter-spacing: 0.15em; font-size: 0.85rem;">The Grand Luxe Experience</span>
+            <h2 class="display-6 fw-bold mt-1 text-dark">Crafted For The Discerning Traveler</h2>
+            <div class="mx-auto mt-2" style="width: 60px; height: 3px; background: var(--luxe-gold-gradient);"></div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="p-4 bg-white rounded-4 shadow-sm border border-light h-100 text-center transition-all hover-translate">
+                    <div class="brand-crest mx-auto mb-3" style="width: 54px; height: 54px; font-size: 1.6rem;">
+                        <i class="bi bi-water"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Infinity Sky Pool</h5>
+                    <p class="text-muted small m-0">Heated rooftop oasis with panoramic shoreline sunset views and artisan cocktails.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="p-4 bg-white rounded-4 shadow-sm border border-light h-100 text-center transition-all hover-translate">
+                    <div class="brand-crest mx-auto mb-3" style="width: 54px; height: 54px; font-size: 1.6rem;">
+                        <i class="bi bi-cup-hot"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Artisanal Dining</h5>
+                    <p class="text-muted small m-0">Three Michelin-starred culinary venues celebrating organic, locally sourced farm cuisine.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="p-4 bg-white rounded-4 shadow-sm border border-light h-100 text-center transition-all hover-translate">
+                    <div class="brand-crest mx-auto mb-3" style="width: 54px; height: 54px; font-size: 1.6rem;">
+                        <i class="bi bi-flower1"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Ayurvedic Wellness Spa</h5>
+                    <p class="text-muted small m-0">Holistic therapies, steam chambers, hydro-baths, and personalized wellness retreats.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="p-4 bg-white rounded-4 shadow-sm border border-light h-100 text-center transition-all hover-translate">
+                    <div class="brand-crest mx-auto mb-3" style="width: 54px; height: 54px; font-size: 1.6rem;">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">24/7 Royal Concierge</h5>
+                    <p class="text-muted small m-0">Private chauffeur, itinerary curators, and round-the-clock bespoke suite service.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Rooms Showcase -->
+<section class="py-5 bg-white border-top border-bottom">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-3">
+            <div>
+                <span class="text-warning text-uppercase fw-bold" style="letter-spacing: 0.15em; font-size: 0.85rem;">Luxury Accommodations</span>
+                <h2 class="display-6 fw-bold m-0 text-dark">Featured Suites & Villas</h2>
+            </div>
+            <a asp-controller="Rooms" asp-action="Index" class="btn btn-luxe-outline">
+                View All Rooms <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var room in featuredRooms)
+            {
+                <div class="col-lg-3 col-md-6">
+                    <div class="room-card-luxe">
+                        <div class="room-image-wrap">
+                            <img src="@(string.IsNullOrEmpty(room.ImageUrl) ? "/images/rooms/deluxe.jpg" : room.ImageUrl)" alt="Room @room.RoomNumber" loading="lazy" onerror="this.onerror=null; this.src='/images/rooms/deluxe.jpg';" />
+                            <div class="room-badge-status badge-avail">
+                                <span class="status-indicator-dot"></span> Available
+                            </div>
+                            <div class="room-badge-price">
+                                ₹@(room.RoomType?.PricePerNight.ToString("N0"))<span> / night</span>
+                            </div>
+                        </div>
+
+                        <div class="room-card-body">
+                            <div class="room-type-tag">Floor @room.FloorNumber • @room.RoomType?.TypeName</div>
+                            <h4 class="room-card-title">Room @room.RoomNumber</h4>
+                            <p class="room-card-desc">@(string.IsNullOrEmpty(room.Description) ? room.RoomType?.Description : room.Description)</p>
+
+                            <div class="amenity-chips">
+                                <span class="amenity-chip"><i class="bi bi-people"></i> Up to @(room.RoomType?.Capacity ?? 2) Guests</span>
+                                <span class="amenity-chip"><i class="bi bi-wifi"></i> Free Wi-Fi</span>
+                                <span class="amenity-chip"><i class="bi bi-snow"></i> A/C</span>
+                            </div>
+
+                            <div class="room-card-footer">
+                                <a asp-controller="Rooms" asp-action="Details" asp-route-id="@room.RoomId" class="btn btn-sm btn-outline-secondary">
+                                    Details
+                                </a>
+                                <a asp-controller="Bookings" asp-action="Create" asp-route-roomId="@room.RoomId" class="btn btn-sm btn-luxe-gold">
+                                    Book Now <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- VIP Member Banner -->
+<section class="py-5" style="background: var(--luxe-navy-gradient); color: #ffffff;">
+    <div class="container py-4">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-3">
+                    <i class="bi bi-gem me-1"></i> Complimentary Perks
+                </span>
+                <h2 class="display-6 fw-bold mb-3">Join The Grand Luxe Club</h2>
+                <p class="text-white-50 lead mb-0">
+                    Register today to unlock 10% direct booking discounts, priority suite upgrades, complimentary breakfast, and flexible cancellation privileges.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a asp-controller="Account" asp-action="Register" class="btn btn-luxe-gold btn-lg px-4 py-3">
+                    <i class="bi bi-person-plus-fill me-1"></i> Register Free Account
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
