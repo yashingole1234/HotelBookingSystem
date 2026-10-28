@@ -163,3 +163,16 @@ The database comes pre-seeded with both Administrator and Guest test accounts:
 
 - **Database Connection:** If SQL Server Express is installed with a different instance name, update the `Data Source` in `appsettings.json` to match your local server (e.g. `Server=(localdb)\\mssqllocaldb` or `Server=localhost`).
 - **Port Assignment:** When running in Visual Studio, port numbers are assigned by `Properties/launchSettings.json`. Both HTTP and HTTPS profiles are supported.
+
+---
+
+## 9. Submission & Candidate Information
+
+- **Candidate Name:** Yash Ingole
+- **Email:** ingoleyash123@gmail.com
+- **Phone:** +91 9876543210
+- **GitHub Profile:** [github.com/yashingole1234](https://github.com/yashingole1234)
+- **Repository:** [github.com/yashingole1234/HotelBookingSystem](https://github.com/yashingole1234/HotelBookingSystem)
+- **Evaluator:** pranay.borode@puretechnology.in
+- **HR Contact:** mayuri.a@puretechnology.in
+
